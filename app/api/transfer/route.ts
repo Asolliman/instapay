@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Account from "@/lib/models/account";
 import Transaction from "@/lib/models/transaction";
+import Payment from "@/lib/models/payment";
 
 export async function POST(request: Request) {
   const { Sender_Id, Receiver_Id, Amount } = await request.json();
@@ -48,6 +49,13 @@ await Transaction.create({
   Amount: parseFloat(Amount),
   Description: `Sent to User ${Receiver_Id}`,
 });
+
+await Payment.create({
+  Payment_Id: parseInt(Sender_Id, 10),
+  Amount: parseInt(Amount, 10),
+  Type: "Transfer",
+  Status: "Completed",
+})
 
 
     return NextResponse.json({

@@ -28,6 +28,7 @@ export async function POST(request: Request) {
     const userAccount = await Account.findOne({
       where: { User_Id: parseInt(User_Id, 10) },
     });
+    
 
     const Account_ID = userAccount?.dataValues.Account_ID;
 

@@ -11,7 +11,7 @@ Account.init(
       primaryKey: true,
     },
     User_Id: { type: DataTypes.INTEGER, allowNull: false },
-    Payment_ID: { type: DataTypes.INTEGER, allowNull: false },
+    Payment_ID: { type: DataTypes.INTEGER, allowNull: true },
     Type: { type: DataTypes.STRING, allowNull: false },
     Balance: { type: DataTypes.FLOAT, defaultValue: 0 },
     JoinedAt: {

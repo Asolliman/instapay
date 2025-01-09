@@ -7,7 +7,7 @@ import Cookies from "js-cookie"; // Make sure to install the js-cookie package
 interface User {
   First_Name: string;
   Last_Name: string;
-  // Add other fields from the API as needed
+  User_Id: number;
 }
 
 export default function ClientDashboard({ user }: { user: User | null }) {
@@ -24,11 +24,10 @@ export default function ClientDashboard({ user }: { user: User | null }) {
     localStorage.removeItem("userId");
 
     // Redirect to login page
-    router.push("/login");
+    router.push("/");
   };
 
   useEffect(() => {
-    console.log(userData);
     if (!userData) {
       // Optionally refetch or handle client-specific logic
       const User_Id = localStorage.getItem("User_Id");
@@ -43,9 +42,10 @@ export default function ClientDashboard({ user }: { user: User | null }) {
           })
           .then((data) => {
             setUserData(data);
-            console.log(data);
           })
           .catch((err) => console.error("Error fetching user data:", err));
+
+          
       }
     }
   }, [userData]);
@@ -54,10 +54,11 @@ export default function ClientDashboard({ user }: { user: User | null }) {
     return <div>Loading user data...</div>;
   }
 
+
   return (
     <div>
       <h2>
-        Welcome, {userData.First_Name} {userData.Last_Name}!
+        Welcome, {userData.First_Name} {userData.Last_Name}! 
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
         <a
