@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Loan from "@/lib/models/loan";
 import Account from "@/lib/models/account";
 import { cookies } from "next/headers";
+import Transaction from "@/lib/models/transaction";
 
 export async function POST(request: Request) {
   const { Amount, Type } = await request.json();
@@ -50,6 +51,16 @@ export async function POST(request: Request) {
     userAccount.dataValues.Balance += Amount;
 
     await userAccount.save();
+
+
+
+    await Transaction.create({
+      Transaction_ID: parseInt(newLoadId, 10),
+      User_Id: parseInt(User_Id, 10),
+      Type: "Transfer",
+      Amount: parseFloat(Amount),
+      Description: `Took out a loan of ${loan.dataValues.Amount}`,
+    });
 
     return NextResponse.json({
       message: "Loan approved, account updated",

@@ -1,24 +1,25 @@
-// api/transactions/route.ts
 import { NextResponse } from "next/server";
 import Transaction from "@/lib/models/transaction";
 
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const User_Id = url.searchParams.get("User_Id");
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("User_Id");
 
-  if (!User_Id) {
+  if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
-  console.log(User_Id);
+
   try {
+    // Fetch transactions for the user
     const transactions = await Transaction.findAll({
-      where: { User_Id: parseInt(User_Id) },
-      
+      where: { User_Id: parseInt(userId, 10) },
+      attributes: ["Transaction_ID", "Type", "Amount", "Description", "Transaction_date"],
+      order: [["Transaction_ID", "DESC"]],
     });
 
-    return NextResponse.json({transactions});
+    return NextResponse.json({ transactions });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

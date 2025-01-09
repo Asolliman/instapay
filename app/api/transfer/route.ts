@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Account from "@/lib/models/account";
+import Transaction from "@/lib/models/transaction";
 
 export async function POST(request: Request) {
   const { Sender_Id, Receiver_Id, Amount } = await request.json();
@@ -36,6 +37,18 @@ export async function POST(request: Request) {
     // Save changes
     await Account.update({ Balance: senderAccount.dataValues.Balance } , { where: { User_Id: parseInt(Sender_Id, 10) } } );
     await Account.update({ Balance: receiverAccount.dataValues.Balance }, { where: { User_Id: parseInt(Receiver_Id, 10) } });
+
+
+// Log the transfer as a transaction
+await Transaction.create({
+  Transaction_ID: parseInt(Receiver_Id, 10),
+
+  User_Id: parseInt(Sender_Id, 10),
+  Type: "Transfer",
+  Amount: parseFloat(Amount),
+  Description: `Sent to User ${Receiver_Id}`,
+});
+
 
     return NextResponse.json({
       message: "Transfer successful",

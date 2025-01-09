@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Investment from "@/lib/models/investment";
 import Account from "@/lib/models/account";
 import { cookies } from "next/headers";
+import Transaction from "@/lib/models/transaction";
 
 export async function POST(request: Request) {
   const { price, Interest, Type } = await request.json();
@@ -70,6 +71,16 @@ export async function POST(request: Request) {
       price,
       Interest,
       Account_ID: userAccount.dataValues.Account_ID,
+    });
+
+
+    await Transaction.create({
+      Transaction_ID: parseInt(newInvestmentId, 10),
+
+      User_Id: parseInt(User_Id, 10),
+      Type: "Transfer",
+      Amount: parseFloat(price),
+      Description: `Made investment to ${newInvestment.dataValues.Type}`,
     });
 
     return NextResponse.json({

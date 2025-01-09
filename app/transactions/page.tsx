@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 interface Transaction {
   Transaction_ID: number;
   Amount: number;
-  Status: string;
+  Transaction_date: string;
   Type: string;
 }
 
@@ -48,7 +48,7 @@ export default function TransactionsPage() {
                 {transaction.Amount}
               </td>
               <td className="border border-gray-400 p-2">
-                {transaction.Status}
+                {transaction.Transaction_date}
               </td>
               <td className="border border-gray-400 p-2">
                 {transaction.Type}

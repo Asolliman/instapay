@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import Payment from "@/lib/models/payment";
 import Account from "@/lib/models/account";
 import { cookies } from "next/headers";
+import Transaction from "@/lib/models/transaction";
 
 export async function POST(request: Request) {
   const { Amount, Type, Status } = await request.json();
@@ -50,6 +51,16 @@ export async function POST(request: Request) {
       userAccount.dataValues.Balance -= Amount; // Assuming the payment deducts balance
       await userAccount.save();
     }
+
+
+    await Transaction.create({
+      Transaction_ID: parseInt(Account_ID, 10),
+
+      User_Id: parseInt(User_Id, 10),
+      Type: `${Type}`,
+      Amount: parseFloat(Amount),
+      Description: `Status of payment ${payment.dataValues.Status}`,
+    });
 
     return NextResponse.json({
       message: "Payment recorded successfully",
